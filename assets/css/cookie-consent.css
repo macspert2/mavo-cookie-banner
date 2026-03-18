@@ -1,0 +1,64 @@
+/* MaVo Cookie Consent — banner styles */
+
+.mavo-cookie-banner {
+	position:       fixed;
+	bottom:         0;
+	left:           0;
+	right:          0;
+	z-index:        99999;
+
+	display:        flex;
+	align-items:    center;
+	justify-content: center;
+	gap:            16px;
+	flex-wrap:      wrap;
+
+	padding:        14px 24px;
+	background:     rgba(30, 30, 30, 0.95);
+	color:          #f5f5f5;
+	text-align:     center;
+	box-shadow:     0 -2px 8px rgba(0, 0, 0, 0.25);
+
+	transform:      translateY(0);
+	opacity:        1;
+	transition:     transform 0.35s ease, opacity 0.35s ease;
+}
+
+/* Hidden state: start (before JS reveals) and return-visitor state */
+.mavo-cookie-banner--hidden {
+	transform:      translateY(100%);
+	opacity:        0;
+	pointer-events: none;
+}
+
+/* Dismissing state: triggers the slide-down exit animation */
+.mavo-cookie-banner--dismissing {
+	transform:      translateY(100%);
+	opacity:        0;
+	pointer-events: none;
+}
+
+/* ---- Inner elements ---- */
+
+.mavo-cookie-banner__text {
+	font-size:  13px;
+	margin:     0;
+}
+
+.mavo-cookie-banner__ok {
+	flex-shrink:      0;
+	padding:          6px 14px;
+	background:       transparent;
+	color:            #f5f5f5;
+	border:           1px solid rgba(245, 245, 245, 0.5);
+	border-radius:    3px;
+	font-size:        13px;
+	cursor:           pointer;
+	transition:       background 0.2s ease;
+}
+
+.mavo-cookie-banner__ok:hover,
+.mavo-cookie-banner__ok:focus {
+	background: rgba(245, 245, 245, 0.15);
+	outline:    none;
+}
