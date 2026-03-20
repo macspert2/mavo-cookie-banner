@@ -82,9 +82,10 @@ class Mavo_Cookie_Consent {
 	 * removes --hidden when the consent cookie is already present.
 	 */
 	public function render_banner(): void {
+		/* render the hidden banner for everyone - due to page caching everyone should see the same html
 		if ( isset( $_COOKIE[ self::COOKIE_NAME ] ) ) {
 			return;
-		}
+		} */
 		?>
 		<div id="mavo-cookie-banner"
 		     class="mavo-cookie-banner mavo-cookie-banner--hidden"
