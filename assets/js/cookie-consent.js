@@ -61,23 +61,20 @@
 		}
 
 		// Jetpack Stats
-		if ( config.jetpackStatsMarkup ) {
-			var tmp = document.createElement( 'div' );
-			tmp.innerHTML = config.jetpackStatsMarkup;
-
-			var scripts = tmp.getElementsByTagName( 'script' );
-			for ( var i = 0; i < scripts.length; i++ ) {
-				var orig = scripts[ i ];
-				var s    = document.createElement( 'script' );
-				if ( orig.src ) {
-					s.src   = orig.src;
-					s.async = orig.async;
-					s.defer = orig.defer;
-				} else {
-					s.textContent = orig.textContent;
-				}
-				document.head.appendChild( s );
+		// config.jetpackStats = { src: '...', inline: '_stq = ...' }
+		if ( config.jetpackStats && config.jetpackStats.src ) {
+			// Run the _stq initialisation code first (sets up the queue).
+			if ( config.jetpackStats.inline ) {
+				var jpInline = document.createElement( 'script' );
+				jpInline.textContent = config.jetpackStats.inline;
+				document.head.appendChild( jpInline );
 			}
+
+			// Then load the external stats script.
+			var jpScript = document.createElement( 'script' );
+			jpScript.src   = config.jetpackStats.src;
+			jpScript.async = true;
+			document.head.appendChild( jpScript );
 		}
 	}
 

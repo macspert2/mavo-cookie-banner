@@ -57,6 +57,10 @@ class Mavo_Cookie_Consent {
 			];
 		}
 
+		// Jetpack Stats config, populated by the Jetpack class if the handle
+		// was intercepted (null = Jetpack Stats not active or not enqueued).
+		$jetpack_stats = apply_filters( 'mavo_cc_jetpack_stats_config', null );
+
 		wp_localize_script(
 			'mavo-cookie-consent',
 			'mavoCookieConsent',
@@ -67,6 +71,7 @@ class Mavo_Cookie_Consent {
 				'scProject'       => $tracking['sc_project'],
 				'scSecurity'      => $tracking['sc_security'],
 				'pendingCookies'  => $pending,
+				'jetpackStats'    => $jetpack_stats,
 			]
 		);
 	}
