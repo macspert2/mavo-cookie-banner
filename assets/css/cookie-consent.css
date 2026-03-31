@@ -43,6 +43,8 @@
 .mavo-cookie-banner__text {
 	font-size:  13px;
 	margin:     0;
+	flex: 1 1 auto;
+	min-width: 0;
 }
 
 .mavo-cookie-banner__ok {
