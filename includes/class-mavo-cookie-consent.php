@@ -45,6 +45,7 @@ class Mavo_Cookie_Consent {
 			MAVO_CC_VERSION,
 			true // footer
 		);
+		wp_script_add_data( 'mavo-cookie-consent', 'defer', true );
 
 		$tracking = Mavo_Cookie_Consent_Settings::get_tracking_config();
 
