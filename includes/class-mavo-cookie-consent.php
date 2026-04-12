@@ -24,6 +24,9 @@ class Mavo_Cookie_Consent {
 	private function __construct() {
 		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_assets' ] );
 		add_action( 'wp_footer',          [ $this, 'render_banner' ] );
+		// Priority 99 ensures our buffer wraps Autoptimize's (which hooks at priority 1),
+		// so we process the HTML last and the defer attribute survives.
+		add_action( 'template_redirect',  [ $this, 'force_script_defer' ], 99 );
 	}
 
 	// -------------------------------------------------------------------------
@@ -45,6 +48,8 @@ class Mavo_Cookie_Consent {
 			MAVO_CC_VERSION,
 			true // footer
 		);
+		// Adds defer at the WordPress level. Autoptimize strips this from excluded
+		// scripts; force_script_defer() re-adds it via output buffer as a fallback.
 		wp_script_add_data( 'mavo-cookie-consent', 'defer', true );
 
 		$tracking = Mavo_Cookie_Consent_Settings::get_tracking_config();
@@ -75,6 +80,31 @@ class Mavo_Cookie_Consent {
 				'jetpackStats'    => $jetpack_stats,
 			]
 		);
+	}
+
+	// -------------------------------------------------------------------------
+	// Output-buffer post-processor
+	// -------------------------------------------------------------------------
+
+	/**
+	 * Force defer on cookie-consent.js after Autoptimize's output buffer runs.
+	 * Autoptimize strips defer from excluded scripts; this patches the final HTML.
+	 * Hooked at template_redirect priority 99 so our buffer wraps Autoptimize's.
+	 */
+	public function force_script_defer(): void {
+		ob_start( function( $html ) {
+			return preg_replace_callback(
+				'/(<script\b[^>]*\bid=["\']mavo-cookie-consent-js["\'][^>]*?)(\s*>)/i',
+				function( $m ) {
+					// Guard: don't add defer if it is already present.
+					if ( stripos( $m[1], 'defer' ) !== false ) {
+						return $m[0];
+					}
+					return $m[1] . ' defer' . $m[2];
+				},
+				$html
+			);
+		} );
 	}
 
 	// -------------------------------------------------------------------------
