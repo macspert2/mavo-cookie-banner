@@ -24,9 +24,9 @@ class Mavo_Cookie_Consent {
 	private function __construct() {
 		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_assets' ] );
 		add_action( 'wp_footer',          [ $this, 'render_banner' ] );
-		// Temporarily disabled to test whether wp_script_add_data defer survives
-		// Autoptimize without this output buffer. Re-enable if defer goes missing.
-		// add_action( 'template_redirect',  [ $this, 'force_script_defer' ], 99 );
+		// Priority 99 ensures our buffer wraps Autoptimize's (which hooks at priority 1),
+		// so we process the HTML last and the defer attribute survives.
+		add_action( 'template_redirect',  [ $this, 'force_script_defer' ], 99 );
 	}
 
 	// -------------------------------------------------------------------------
@@ -93,10 +93,7 @@ class Mavo_Cookie_Consent {
 	 */
 	public function force_script_defer(): void {
 		ob_start( function( $html ) {
-			if ( ! is_string( $html ) || $html === '' ) {
-				return $html;
-			}
-			$result = preg_replace_callback(
+			return preg_replace_callback(
 				'/(<script\b[^>]*\bid=["\']mavo-cookie-consent-js["\'][^>]*?)(\s*>)/i',
 				function( $m ) {
 					// Guard: don't add defer if it is already present.
@@ -107,10 +104,6 @@ class Mavo_Cookie_Consent {
 				},
 				$html
 			);
-			if ( $result === null ) {
-				error_log( 'mavo-cookie-consent: preg_replace_callback failed in force_script_defer (PCRE error ' . preg_last_error() . ')' );
-			}
-			return $result !== null ? $result : $html;
 		} );
 	}
 
