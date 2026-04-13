@@ -24,9 +24,9 @@ class Mavo_Cookie_Consent {
 	private function __construct() {
 		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_assets' ] );
 		add_action( 'wp_footer',          [ $this, 'render_banner' ] );
-		// Priority 99 ensures our buffer wraps Autoptimize's (which hooks at priority 1),
-		// so we process the HTML last and the defer attribute survives.
-		add_action( 'template_redirect',  [ $this, 'force_script_defer' ], 99 );
+		// Temporarily disabled to test whether wp_script_add_data defer survives
+		// Autoptimize without this output buffer. Re-enable if defer goes missing.
+		// add_action( 'template_redirect',  [ $this, 'force_script_defer' ], 99 );
 	}
 
 	// -------------------------------------------------------------------------
