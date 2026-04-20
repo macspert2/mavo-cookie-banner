@@ -52,7 +52,7 @@ class Mavo_Cookie_Consent_Jetpack {
 		wp_dequeue_script( 'jetpack-stats' );
 		wp_deregister_script( 'jetpack-stats' );
 
-		if ( empty( $src ) && empty( $inline ) ) {
+		if ( empty( $src ) && empty( $inline_before ) ) {
 			return;
 		}
 

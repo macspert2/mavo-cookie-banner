@@ -22,7 +22,10 @@ class Mavo_Cookie_Consent {
 	}
 
 	private function __construct() {
-		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_assets' ] );
+		// Priority 103: must run after the Jetpack intercept (priority 102) so that
+		// the mavo_cc_jetpack_stats_config filter is set before apply_filters() is
+		// called inside enqueue_assets via wp_localize_script.
+		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_assets' ], 103 );
 		add_action( 'wp_footer',          [ $this, 'render_banner' ] );
 	}
 
