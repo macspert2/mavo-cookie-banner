@@ -62,7 +62,7 @@
 
 		// Jetpack Stats
 		// config.jetpackStats = { src: '...', inline: '_stq = ...' }
-		if ( config.jetpackStats && config.jetpackStats.src ) {
+		if ( config.jetpackStats && ( config.jetpackStats.src || config.jetpackStats.inline ) ) {
 			// Run the _stq initialisation code first (sets up the queue).
 			if ( config.jetpackStats.inline ) {
 				var jpInline = document.createElement( 'script' );
@@ -70,11 +70,13 @@
 				document.head.appendChild( jpInline );
 			}
 
-			// Then load the external stats script.
-			var jpScript = document.createElement( 'script' );
-			jpScript.src   = config.jetpackStats.src;
-			jpScript.async = true;
-			document.head.appendChild( jpScript );
+			// Load the external stats script if present.
+			if ( config.jetpackStats.src ) {
+				var jpScript = document.createElement( 'script' );
+				jpScript.src   = config.jetpackStats.src;
+				jpScript.async = true;
+				document.head.appendChild( jpScript );
+			}
 		}
 	}
 
