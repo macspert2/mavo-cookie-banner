@@ -21,6 +21,7 @@ define( 'MAVO_CC_URL',     plugin_dir_url( __FILE__ ) );
 
 require_once MAVO_CC_DIR . 'includes/class-mavo-cookie-consent-settings.php';
 require_once MAVO_CC_DIR . 'includes/class-mavo-cookie-consent-suppression.php';
+require_once MAVO_CC_DIR . 'includes/class-mavo-cookie-consent-exclusions.php';
 require_once MAVO_CC_DIR . 'includes/class-mavo-cookie-consent-jetpack.php';
 require_once MAVO_CC_DIR . 'includes/class-mavo-cookie-consent.php';
 

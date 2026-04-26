@@ -44,7 +44,12 @@ class Mavo_Cookie_Consent_Jetpack {
 		global $wp_scripts;
 
 		// Grab the external script URL before dequeuing removes it.
-		$src          = $wp_scripts->registered['jetpack-stats']->src ?? '';
+		$src = $wp_scripts->registered['jetpack-stats']->src ?? '';
+
+		if ( Mavo_Cookie_Consent_Exclusions::is_excluded( 'jetpack-stats', $src ) ) {
+			return;
+		}
+
 		$inline_before = $wp_scripts->get_data( 'jetpack-stats', 'before' );
 
 		// Dequeue + deregister so WordPress does not output either the
