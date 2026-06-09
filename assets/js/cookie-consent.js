@@ -46,6 +46,7 @@
 			};
 			window.gtag( 'js', new Date() );
 			window.gtag( 'config', config.ga4Id );
+			attachOutboundLinkTracking();
 		}
 
 		// Statcounter
@@ -78,6 +79,35 @@
 				document.head.appendChild( jpScript );
 			}
 		}
+	}
+
+	// -------------------------------------------------------------------------
+	// Outbound link tracking
+	// -------------------------------------------------------------------------
+
+	function attachOutboundLinkTracking() {
+		document.addEventListener( 'click', function ( e ) {
+			var anchor = e.target.closest( 'a[href]' );
+			if ( ! anchor ) {
+				return;
+			}
+			var href = anchor.getAttribute( 'href' );
+			if ( ! href || /^(mailto|tel|javascript):/i.test( href ) ) {
+				return;
+			}
+			// Resolve relative URLs via a throwaway element.
+			var a  = document.createElement( 'a' );
+			a.href = href;
+			if ( a.hostname === window.location.hostname ) {
+				return;
+			}
+			window.gtag( 'event', 'outbound_link', {
+				link_url:    a.href,
+				link_domain: a.hostname,
+				link_text:   ( anchor.textContent || '' ).trim().slice( 0, 100 ),
+				outbound:    true,
+			} );
+		} );
 	}
 
 	// -------------------------------------------------------------------------
