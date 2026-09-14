@@ -34,18 +34,23 @@ class Mavo_Cookie_Consent {
 	// -------------------------------------------------------------------------
 
 	public function enqueue_assets(): void {
+		// filemtime, not the plugin version: editing an asset without bumping
+		// the constant used to leave stale files in Autoptimize/Cloudflare.
+		$css = MAVO_CC_DIR . 'assets/css/cookie-consent.css';
+		$js  = MAVO_CC_DIR . 'assets/js/cookie-consent.js';
+
 		wp_enqueue_style(
 			'mavo-cookie-consent',
 			MAVO_CC_URL . 'assets/css/cookie-consent.css',
 			[],
-			MAVO_CC_VERSION
+			file_exists( $css ) ? filemtime( $css ) : MAVO_CC_VERSION
 		);
 
 		wp_enqueue_script(
 			'mavo-cookie-consent',
 			MAVO_CC_URL . 'assets/js/cookie-consent.js',
 			[],
-			MAVO_CC_VERSION,
+			file_exists( $js ) ? filemtime( $js ) : MAVO_CC_VERSION,
 			true // footer
 		);
 		wp_script_add_data( 'mavo-cookie-consent', 'defer', true );
