@@ -46,9 +46,23 @@ class Mavo_Cookie_Consent_Jetpack {
 		// Grab the external script URL before dequeuing removes it.
 		$src = $wp_scripts->registered['jetpack-stats']->src ?? '';
 
-		if ( Mavo_Cookie_Consent_Exclusions::is_excluded( 'jetpack-stats', $src ) ) {
-			return;
-		}
+		/*
+		 * A Mavo_Cookie_Consent_Exclusions class used to be consulted here: a
+		 * registry of script handles and src substrings that must never be
+		 * delayed, extensible through the filters
+		 * mavo_cc_excluded_handle_patterns and mavo_cc_excluded_src_patterns.
+		 *
+		 * It was written for a general "delay every script until consent"
+		 * mechanism — dequeue-and-reload, type="text/plain" — that this plugin
+		 * no longer has. Only Jetpack Stats is intercepted now, and it is
+		 * intercepted deliberately, by name. The registry's one default entry
+		 * was 'geo-mashup', which cannot match the single handle ever passed
+		 * to it, so the check was always false.
+		 *
+		 * Removed rather than kept as a registry with nothing registering. If
+		 * script delaying ever returns, that class is the right shape for it
+		 * and is in this plugin's git history.
+		 */
 
 		$inline_before = $wp_scripts->get_data( 'jetpack-stats', 'before' );
 

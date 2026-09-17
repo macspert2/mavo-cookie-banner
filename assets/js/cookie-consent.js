@@ -28,6 +28,27 @@
 			'; path=/; SameSite=Lax';
 	}
 
+	/**
+	 * Re-send a cookie the server held back, with the attributes the server
+	 * gave it — its own expiry, path, domain, Secure and SameSite.
+	 *
+	 * Those attributes used to be dropped, so every restored cookie took this
+	 * file's defaults instead of its own: a session cookie came back lasting a
+	 * year, and a Secure cookie came back without Secure. Falls back to
+	 * setCookie() only when the server sent no attributes at all, which is the
+	 * one case where a default is all there is to go on.
+	 */
+	function restoreCookie( cookie ) {
+		if ( ! cookie.attributes ) {
+			setCookie( cookie.name, cookie.value );
+			return;
+		}
+
+		document.cookie =
+			encodeURIComponent( cookie.name ) + '=' + encodeURIComponent( cookie.value ) +
+			'; ' + cookie.attributes;
+	}
+
 	// -------------------------------------------------------------------------
 	// Tracking loaders
 	// -------------------------------------------------------------------------
@@ -122,10 +143,10 @@
 
 		setCookie( config.cookieName, '1' );
 
-		// Restore suppressed third-party cookies.
+		// Restore suppressed third-party cookies, as they were.
 		var pending = config.pendingCookies || [];
 		for ( var i = 0; i < pending.length; i++ ) {
-			setCookie( pending[ i ].name, pending[ i ].value );
+			restoreCookie( pending[ i ] );
 		}
 
 		loadTracking();

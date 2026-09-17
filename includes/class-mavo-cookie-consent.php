@@ -58,11 +58,19 @@ class Mavo_Cookie_Consent {
 		$tracking = Mavo_Cookie_Consent_Settings::get_tracking_config();
 
 		// Build pending cookies list (empty for returning visitors).
+		//
+		// The attributes travel with each cookie. They were captured and then
+		// left behind here, so a restored cookie was rewritten with this
+		// plugin's own defaults rather than its own: a session cookie came
+		// back persisting for a year, Secure was lost, and a path- or
+		// domain-scoped cookie was broadened to the whole site. Restoring a
+		// cookie should put it back, not redefine it.
 		$pending = [];
 		foreach ( Mavo_Cookie_Consent_Suppression::get_pending_cookies() as $cookie ) {
 			$pending[] = [
-				'name'  => $cookie['name'],
-				'value' => $cookie['value'],
+				'name'       => $cookie['name'],
+				'value'      => $cookie['value'],
+				'attributes' => $cookie['attributes'],
 			];
 		}
 
